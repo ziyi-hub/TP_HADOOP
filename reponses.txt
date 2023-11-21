@@ -1,0 +1,12 @@
+Question1.1:
+	Question1: 
+		- Map Input Record signifie l'enregistrements d'entrée: les données d'entrée sont divisées en plusieurs blocs, et chaque bloc est traité par une tâche Map. Le nombre total d'enregistrements d'entrée pour toutes les tâches Map est ce que l'on appelle "Map Input Records". 
+		- Map Output Record signifie l'enregistrement de sortie: représentent le nombre total de paires clé-valeur générées en sortie par l'ensemble des tâches Map.
+		
+	Question2:
+		- Ces paires clé-valeur constituent l'ensemble intermédiaire de données entre les tâches Map et Reduce. Ces données intermédiaires sont partitionnées et triées en fonction de la clé pour faciliter le traitement par les tâches Reduce.
+		
+	Question3:
+		- "Reduce Input Groups" se réfère au nombre de groupes de clés distincts présents dans l'ensemble des données intermédiaires.
+	
+	
