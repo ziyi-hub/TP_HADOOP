@@ -34,7 +34,7 @@ public class Question1_1 {
 		        // Set the current word (trims leading and trailing spaces from the current word)
 	            word.set(tokenizer.nextToken().trim());
 	            
-	            // Emit the word as the output key and '1' as the output value <"i", 1> <"h", 1> <"h", 1>
+	            // Emit the word as the output key and '1' as the output value <"i", 1> <"h", 1> <"h", 1><"h", 1>
 	            context.write(word, one);
 	        }
 		}
