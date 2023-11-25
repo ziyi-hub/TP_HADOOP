@@ -1,4 +1,5 @@
 Question1:
+
 	Question1.1: 
 		- Map Input Record signifie l'enregistrements d'entrée: les données d'entrée sont divisées en plusieurs blocs, et chaque bloc est traité par une tâche Map. Le nombre total d'enregistrements d'entrée pour toutes les tâches Map est ce que l'on appelle "Map Input Records". 
 		- Map Output Record signifie l'enregistrement de sortie: représentent le nombre total de paires clé-valeur générées en sortie par l'ensemble des tâches Map.
@@ -11,5 +12,14 @@ Question1:
 	
 	Question1.4:
 		- hdfs dfs -ls /user/wangziy, est le chemin vers mon répertoire personel
+		- commande transfert de fichiers d'un ordinateur local vers un système distant: scp /Users/wangziyihuifei/eclipse-workspace/tp.jar wangziy@152.77.81.30:/home/wangziy
+		
+	Question1.5:
+		- 2023-11-25 23:01:14,286 INFO mapreduce.JobSubmitter: number of splits:5
+		- On constate que le nombre de splits est 5
+		- 2023-11-25 23:01:12,280 INFO input.FileInputFormat: Total input files to process : 5
+		- On constate que le compteur "Total input files" to process: 5 correspond au nombre de "splits": 5, vu que ce compteur représente le nombre total de chemins d'entrée à traiter par le job MapReduce.
+		
+	
 		
 	
