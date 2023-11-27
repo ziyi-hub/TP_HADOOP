@@ -69,6 +69,11 @@ public class Question1_1 {
 		job.setMapperClass(WordCountMapper.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
+		
+		//La fonction du combiner est de réduire la quantité de données qui doit être transférée entre les nœuds de mappage et le nœud de réduction principal. 
+		job.setCombinerClass(WordCountReducer.class);
+		
+		job.setNumReduceTasks(3);
 
 		job.setReducerClass(WordCountReducer.class);
 		job.setOutputKeyClass(Text.class);
