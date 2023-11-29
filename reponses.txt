@@ -85,7 +85,37 @@ Question11:
 	
 	- On peut voir que le temps d'exécution total des tâches de réduction est considérablement réduit lorsqu'un seul reducer est utilisé par rapport à l'utilisation de trois reducers. Cela indique une amélioration significative de la performance lorsqu'il y a moins de reducers. Moins de reducers peut conduire à une moindre surcharge de gestion et une meilleure efficacité dans le traitement des données.
 	
+Question12: 
+	- In-Mapper
+		Total time spent by all maps in occupied slots (ms)=23042
+		Total time spent by all map tasks (ms)=23042
+		
+	- Sans In-Mapper
+		Total time spent by all maps in occupied slots (ms)=25024
+		Total time spent by all map tasks (ms)=25024
+		
+	- On observe que les valeurs associées au temps d'éxecution de la phase de mapping est réduit, cela signifie In-Mapper Combiner améliorer l'efficacité de la phase de mapping.
 
+Question13: 
+	- In-Mapper
+		Physical memory (bytes) snapshot=3426861056
+		Virtual memory (bytes) snapshot=21057044480
+		Peak Map Physical memory (bytes)=568418304
+		Peak Map Virtual memory (bytes)=2631835648
+		
+	- Sans In-Mapper
+		Physical memory (bytes) snapshot=3436158976
+		Virtual memory (bytes) snapshot=21070225408
+		Peak Map Physical memory (bytes)=573571072
+		Peak Map Virtual memory (bytes)=2637877248
+	
+	- On observe que l'utilisation de l'in-mapper combiner semble avoir réduit légèrement la mémoire physique maximale et la mémoire virtuelle maximale utilisée par les mappers.
+	- On observe que l'utilisation de l'in-mapper combiner semble avoir légèrement augmenté la mémoire physique maximale et la mémoire virtuelle maximale utilisée par les reducers.
+	
+Question14: 
+	
+		
+	
 	
 	
 	
