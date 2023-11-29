@@ -18,6 +18,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+
 public class Q00 {
 	/**
 	 * Logger for this class
@@ -56,6 +57,8 @@ public class Q00 {
 		job.setMapperClass(MyMapper.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
+		
+		//job.setCombinerClass(MyReducer.class);
 
 		job.setReducerClass(MyReducer.class);
 		job.setOutputKeyClass(Text.class);

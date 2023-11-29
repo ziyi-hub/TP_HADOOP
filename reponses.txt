@@ -1,12 +1,103 @@
-Question1.1:
-	Question1: 
-		- Map Input Record signifie l'enregistrements d'entrée: les données d'entrée sont divisées en plusieurs blocs, et chaque bloc est traité par une tâche Map. Le nombre total d'enregistrements d'entrée pour toutes les tâches Map est ce que l'on appelle "Map Input Records". 
-		- Map Output Record signifie l'enregistrement de sortie: représentent le nombre total de paires clé-valeur générées en sortie par l'ensemble des tâches Map.
+Question1:
+	- Map Input Record signifie le nombre d'enregistrements d'entrée: les données d'entrée sont divisées en plusieurs blocs, et chaque bloc est traité par une tâche Map. Le nombre total d'enregistrements d'entrée pour toutes les tâches Map est ce que l'on appelle "Map Input Records". 
+	- Map Output Record signifie le nombre d'enregistrement de sortie: représentent le nombre total de paires clé-valeur générées en sortie par l'ensemble des tâches Map.
 		
-	Question2:
-		- Ces paires clé-valeur constituent l'ensemble intermédiaire de données entre les tâches Map et Reduce. Ces données intermédiaires sont partitionnées et triées en fonction de la clé pour faciliter le traitement par les tâches Reduce.
+Question2:
+	- Ces paires clé-valeur constituent l'ensemble intermédiaire de données entre les tâches Map et Reduce. Ces données intermédiaires sont partitionnées et triées en fonction de la clé pour faciliter le traitement par les tâches Reduce.
 		
-	Question3:
-		- "Reduce Input Groups" se réfère au nombre de groupes de clés distincts présents dans l'ensemble des données intermédiaires.
+Question3:
+	- "Reduce Input Groups" se réfère au nombre de groupes de clés distincts présents dans l'ensemble des données intermédiaires.
+
+Question4:
+	- hdfs dfs -ls /user/wangziy, est le chemin vers mon répertoire personel
+	- commande transfert de fichiers d'un ordinateur local vers un système distant: scp /Users/wangziyihuifei/eclipse-workspace/tp.jar wangziy@152.77.81.30:/home/wangziy
 	
+Question5:
+	- 2023-11-25 23:01:14,286 INFO mapreduce.JobSubmitter: number of splits:5
+	- On constate que le nombre de splits est 5
+	- 2023-11-25 23:01:12,280 INFO input.FileInputFormat: Total input files to process : 5
+	- On constate que le compteur "Total input files" to process: 5 correspond au nombre de "splits": 5, vu que ce compteur représente le nombre total de repertoires d'entrée à traiter par le job MapReduce, et sur le repertoire /data/miserables, on constate qu'il y a 5 fichiers txt en tant que l'entrée. 
+	
+Question6:
+	- Avec combine
+		Combine input records=467439
+		Combine output records=45717
+	- Sans combine
+		Combine input records=0
+		Combine output records=0
+		
+	- En comparant ces valeurs, on constate que Combine input records est passé de 0 à 467439 et Combine output records est passé de 0 à 45717.
+	- La différence entre Combine input records et Combine output records donne une indication de réduction des données effectué par le combiner.
+	- Du coup, le compteur Combine input records et le compteur Combine output records permettent de vérifier que le combiner a fonctionné.
+	
+Question7:
+	- Avec combine
+		Total time spent by all reduces in occupied slots (ms)=3539
+		Total time spent by all reduce tasks (ms)=3539
+		Total vcore-milliseconds taken by all reduce tasks=3539
+		Total megabyte-milliseconds taken by all reduce tasks=7078000
+		GC time elapsed (ms)=1488
+		CPU time spent (ms)=8840
+	- Sans combine
+		Total time spent by all reduces in occupied slots (ms)=4292
+		Total time spent by all reduce tasks (ms)=4292
+		Total vcore-milliseconds taken by all reduce tasks=4292
+		Total megabyte-milliseconds taken by all reduce tasks=8584000
+		GC time elapsed (ms)=1354
+		CPU time spent (ms)=9660
+		
+	- Les compteurs indiqués ci-dessus peuvent nous donner des informations sur le temps d'exécution, permettent d’estimer le gain effectivement apporté par le combiner.
+	- En comparant ces valeurs, on peut observer que les valeurs associées à l'utilisation du combiner sont généralement inférieures à celles sans le combiner. Cela suggère que le combiner a contribué à une réduction du temps d'exécution, de l'utilisation CPU, et potentiellement à une utilisation plus efficace des ressources mémoire. 
+
+Question8:
+	- Le mot le plus utilisé est "de", qui répète 17085 fois.
+	- En utilisant commandes hadoop fs -cat wordcount/part-r-00000 | awk '{print $2}' | sort -nr | head -1 , on trouve le nombre max est "17085" dans output.
+	- En utilisant commandes hadoop fs -cat wordcount/part-r-00000 | grep "17085", on trouve la ligne contiens "17085", du coup, le mot est "de".
+	
+Question9:
+	- Trois Reduceurs
+		Shuffled Maps =15
+		Merged Map outputs=15
+	- Seul Reduceur
+		Shuffled Maps =5
+		Merged Map outputs=5
+		
+	- En comparant ces valeurs, on constate que les valeurs avec setNumReduceTasks(3), est trois fois la valeur des champs avec un seul réducteur.
+	
+Question10:
+	-rw-r--r--   1 wangziy wangziy          0 2023-11-27 10:48 wordcount/_SUCCESS
+	-rw-r--r--   1 wangziy wangziy      78595 2023-11-27 10:48 wordcount/part-r-00000
+	-rw-r--r--   1 wangziy wangziy      79306 2023-11-27 10:48 wordcount/part-r-00001
+	-rw-r--r--   1 wangziy wangziy      78473 2023-11-27 10:48 wordcount/part-r-00002
+	
+	- Nous pouvons consater que ce répertoire a un fichier de sortie pour chaque réducteur (3 fichiers). cependant pour le dépôt en 1.4, nous n'avons qu'un seul fichier de sortie. c'est parce que nous n'avons qu'un seul réducteur. on voit donc que le nombre de fichiers en sortie est lié au nombre de réducteurs.
+	
+Question11:
+	- Trois Reduceurs
+		Total time spent by all reduces in occupied slots (ms)=8660
+		Total time spent by all reduce tasks (ms)=8660
+		Total vcore-milliseconds taken by all reduce tasks=8660
+
+	- Seul Reduceur
+		Total time spent by all reduces in occupied slots (ms)=2793
+		Total time spent by all reduce tasks (ms)=2793
+		Total vcore-milliseconds taken by all reduce tasks=2793
+	
+	- On peut voir que le temps d'exécution total des tâches de réduction est considérablement réduit lorsqu'un seul reducer est utilisé par rapport à l'utilisation de trois reducers. Cela indique une amélioration significative de la performance lorsqu'il y a moins de reducers. Moins de reducers peut conduire à une moindre surcharge de gestion et une meilleure efficacité dans le traitement des données.
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
 	

@@ -34,7 +34,7 @@ public class Question1_1 {
 		        // Set the current word (trims leading and trailing spaces from the current word)
 	            word.set(tokenizer.nextToken().trim());
 	            
-	            // Emit the word as the output key and '1' as the output value <"i", 1> <"h", 1> <"h", 1>
+	            // Emit the word as the output key and '1' as the output value <"i", 1> <"h", 1> <"h", 1><"h", 1>
 	            context.write(word, one);
 	        }
 		}
@@ -69,6 +69,11 @@ public class Question1_1 {
 		job.setMapperClass(WordCountMapper.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
+		
+		//La fonction du combiner est de réduire la quantité de données qui doit être transférée entre les nœuds de mappage et le nœud de réduction principal. 
+		job.setCombinerClass(WordCountReducer.class);
+		
+		job.setNumReduceTasks(3);
 
 		job.setReducerClass(WordCountReducer.class);
 		job.setOutputKeyClass(Text.class);
