@@ -112,9 +112,28 @@ Question13:
 	- On observe que l'utilisation de l'in-mapper combiner semble avoir réduit légèrement la mémoire physique maximale et la mémoire virtuelle maximale utilisée par les mappers.
 	- On observe que l'utilisation de l'in-mapper combiner semble avoir légèrement augmenté la mémoire physique maximale et la mémoire virtuelle maximale utilisée par les reducers.
 	
-Question14: 
-	
+Question15: 
+	- le type sémantique
+		La clé intermédiaire dans le processus MapReduce représente le "Country".
+		La valeur intermédiaire représente le "Tag" associés à ce pays.
 		
+	- le type Java
+		Intermediate Key: Text (representing the country)
+		Intermediate Value: Text (representing tags associated with the country)
+
+Question18:
+	- Les tags les plus utilisés en France sont suivant:
+		FR	somalia 52
+		FR	africa 38
+		FR	refugees 24
+		FR	mogadishu 20
+		FR	africia 18
+
+Question19:
+	- Oui
+	- Espace Mémoire Limité: Sur un cluster Hadoop, la mémoire disponible pour chaque tâche (Mapper ou Reducer) est généralement limitée. Si la taille de la structure en mémoire devient trop grande, cela peut conduire à des erreurs d'OutOfMemory.
+	- Combiner: Utilisez le combiner pour effectuer une agrégation partielle des données au niveau des mappers avant qu'elles ne soient transférées au reducer. Cela peut réduire la quantité de données à traiter dans le reducer.
+	- Limitation du Nombre de Tags: Si la quantité de données est énorme et que le nombre de tags est très grand, il peut être nécessaire de limiter le nombre de tags pris en compte dans votre analyse, en ne considérant par exemple que les tags les plus fréquents.
 	
 	
 	
