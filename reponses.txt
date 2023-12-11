@@ -50,7 +50,7 @@ Question7:
 	- En comparant ces valeurs, on peut observer que les valeurs associées à l'utilisation du combiner sont généralement inférieures à celles sans le combiner. Cela suggère que le combiner a contribué à une réduction du temps d'exécution, de l'utilisation CPU, et potentiellement à une utilisation plus efficace des ressources mémoire. 
 
 Question8:
-	- Le mot le plus utilisé est "de", qui répète 17085 fois.
+	- Le mot le plus utilisé est "de", qui répète 17085l fois.
 	- En utilisant commandes hadoop fs -cat wordcount/part-r-00000 | awk '{print $2}' | sort -nr | head -1 , on trouve le nombre max est "17085" dans output.
 	- En utilisant commandes hadoop fs -cat wordcount/part-r-00000 | grep "17085", on trouve la ligne contiens "17085", du coup, le mot est "de".
 	

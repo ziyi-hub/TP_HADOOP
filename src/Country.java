@@ -359,122 +359,9 @@ public enum Country {
 		return returnint;
 	}
 	
-	public static class TagMapper extends Mapper<LongWritable, Text, Text, Text> {
-		private final static IntWritable one = new IntWritable(1);
-		private Text word = new Text();
-	    private HashMap<String, Integer> tagMap;
-	    
-	    private Text country = new Text();
-        private Text tag = new Text();
-	   
-	    @Override
-		protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-//			// Convert the input text to lowercase and remove non-alphabetic characters, break the cleaned text into individual words
-//	        StringTokenizer tokenizer = new StringTokenizer(value.toString().toLowerCase().replaceAll("[^a-zA-Z ]", " "));
-//	        
-//	        // Loop iterates through each word in the tokenizer
-//	        while (tokenizer.hasMoreTokens()) {		     
-//	        	
-//	        	// Set the current word (trims leading and trailing spaces from the current word)
-//	            String currentWord = tokenizer.nextToken().trim();
-//	            
-//	            // Update the word count in the in-mapper combiner buffer
-//	            tagMap.put(currentWord, tagMap.getOrDefault(currentWord, 0) + 1);
-//	        }
-	    	// Assuming input format: "photo_id \t country \t tag1,tag2,tag3,..."
-            String[] parts = value.toString().split("\t");
-
-            if (parts.length >= 3) {
-                country.set(parts[1]);
-
-                // Split tags and emit (country, tag)
-                String[] tags = parts[2].split(",");
-                for (String t : tags) {
-                    tag.set(t.trim());
-                    context.write(country, tag);
-                }
-            }
-		}
-	    
-	   
-	}
 	
-	public static class TagReducer extends Reducer<Text, Text, Text, Text> {
-//		private IntWritable result = new IntWritable();
-//		
-//		protected void reduce(Text word, Iterable<IntWritable> occurrences, Context context) throws IOException, InterruptedException {
-//			Integer K = Integer.parseInt(context.getConfiguration().get("k"));
-//			int count = 0;
-//			
-//			//This loop iterates over the values associated with a particular key. 
-//			//In the context of a word count, each value is the number 1. It adds up all these 1 values to calculate the total count (sum) for the current word.
-//			for(IntWritable occ : occurrences) {
-//				System.out.println(occ);
-//				count += occ.get();
-//			}
-//			
-//	       HashMap<String, Integer> countryTagCounts = new HashMap<>();
-//	       
-//	       
-//			// Créez une MinMaxPriorityQueue avec la taille spécifiée (K)
-//	        MinMaxPriorityQueue<StringAndInt> minMaxPriorityQueue =
-//	                MinMaxPriorityQueue
-//	                        .orderedBy(StringAndInt::compareTo)
-//	                        .maximumSize(K)
-//	                        .create();
-//	        
-//
-//	        // Ajoutez tous les éléments de la liste à la MinMaxPriorityQueue
-//	        //minMaxPriorityQueue.addAll(tagMap);
-//
-//	        // Affichez les K tags les plus populaires
-//	        System.out.println("Les " + K + " tags les plus populaires :");
-//	        while (!minMaxPriorityQueue.isEmpty()) {
-//	            System.out.println(minMaxPriorityQueue.poll());
-//	        }
-//			
-//			result.set(count);
-//			
-//			context.write(word, result);
-//		}
-		
-
-        private int k;
-
-        @Override
-        protected void setup(Context context) throws IOException, InterruptedException {
-            Configuration conf = context.getConfiguration();
-            // Get the value of K from configuration
-            k = conf.getInt("topK", 10);
-        }
-
-        public void reduce(Text key, Iterable<Text> values, Context context)
-                throws IOException, InterruptedException {
-            // Count occurrences of each tag
-            Map<String, Integer> tagCount = new HashMap<>();
-            for (Text value : values) {
-                String tag = value.toString();
-                tagCount.put(tag, tagCount.getOrDefault(tag, 0) + 1);
-            }
-
-            // Use a priority queue to get the top K tags
-            MinMaxPriorityQueue<StringAndInt> minMaxPriorityQueue = null;
-            for (Map.Entry<String, Integer> entry : tagCount.entrySet()) {
-            	minMaxPriorityQueue.add(new StringAndInt(entry.getKey(), entry.getValue()));
-                if (minMaxPriorityQueue.size() > k) {
-                	minMaxPriorityQueue.poll(); // Remove the smallest element
-                }
-            }
-
-            // Emit the top K tags for the country
-            while (!minMaxPriorityQueue.isEmpty()) {
-            	StringAndInt tc = minMaxPriorityQueue.poll();
-                context.write(key, new Text(tc.getTag() + "\t" + tc.getOccurrences()));
-            }
-        }
-	}
-
-	public static void main(String[] args) throws Exception {
+	
+	public static void main(String[] args) {
 		Country paris = Country.getCountryAt(48.856578, 2.351828);
 		System.out.println("Paris : "+paris.toInt()+","+paris);
 		Country bruxelles = Country.getCountryAt(50.846686, 4.352425);
@@ -483,30 +370,7 @@ public enum Country {
 		System.out.println("Lille:"+lille.toInt()+","+lille);
 		Country compiegne = Country.getCountryAt(49.4149, 2.823056);
 		System.out.println("Compiègne:"+compiegne.toInt()+","+compiegne);
-		
-		Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "PopularTagsByCountry");
-        job.setJarByClass(Country.class);
-
-        job.setMapperClass(TagMapper.class);
-        job.setReducerClass(TagReducer.class);
-
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
-
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
-
-        job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
-
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-        // Set the value of K as a configuration property
-        job.getConfiguration().setInt("topK", Integer.parseInt(args[2]));
-
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
-
 	}
+
+	
 }

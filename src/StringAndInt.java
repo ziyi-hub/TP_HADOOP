@@ -21,8 +21,7 @@ public class StringAndInt implements Comparable<StringAndInt> {
 
 	@Override
 	public int compareTo(StringAndInt other) {
-		// TODO Auto-generated method stub
-		return Integer.compare(this.occurrences, other.occurrences);
+		return -Integer.compare(this.occurrences, other.occurrences);
 	}
 	
 }
