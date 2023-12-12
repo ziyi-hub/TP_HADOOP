@@ -28,8 +28,8 @@ public class Question2_2 {
 	        // Check if the line has 23 elements
 	        if (parts.length == 23) {
 	        	if (!parts[10].isEmpty() && !parts[11].isEmpty() && !parts[8].isEmpty()) {
-	        		double latitude = Double.parseDouble(parts[10]);
-		            double longitude = Double.parseDouble(parts[11]);
+	        		double latitude = Double.parseDouble(parts[11]);
+		            double longitude = Double.parseDouble(parts[10]);
 		            
 		            // Get the country latitude and longitude
 		            Country country = Country.getCountryAt(latitude, longitude);
@@ -71,10 +71,11 @@ public class Question2_2 {
             }
 
             // Emit the top K tags for the country
-            while (!minMaxPriorityQueue.isEmpty()) {
-            	StringAndInt tc = minMaxPriorityQueue.poll();
+            for (StringAndInt tc: minMaxPriorityQueue) {
                 context.write(key, new Text(tc.getTag() + " " + tc.getOccurrences()));
             }
+            
+            
         }
 	}
 	

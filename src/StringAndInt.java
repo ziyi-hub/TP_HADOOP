@@ -23,13 +23,13 @@ public class StringAndInt implements Comparable<StringAndInt>, Writable {
     }
 
     // Getter pour le nombre d'occurrences
-    public int getOccurrences() {
+    public Integer getOccurrences() {
         return occurrences;
     }
 
 	@Override
 	public int compareTo(StringAndInt other) {
-		return -Integer.compare(this.occurrences, other.occurrences);
+		return Integer.compare(other.occurrences, this.occurrences);
 	}
 
 	@Override

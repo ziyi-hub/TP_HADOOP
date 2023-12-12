@@ -1,28 +1,24 @@
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import com.google.common.collect.MinMaxPriorityQueue;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-public class Question2_1 {
+import com.google.common.collect.MinMaxPriorityQueue;
+
+public class Question3_0 {
 	
-	public static class TagMapper extends Mapper<Object, Text, Text, Text> {
+	public static class TagMapper extends Mapper<Object, Text, Text, StringAndInt> {
 		
 
 	  
@@ -32,37 +28,39 @@ public class Question2_1 {
 	        // Check if the line has 23 elements
 	        if (parts.length == 23) {
 	        	if (!parts[10].isEmpty() && !parts[11].isEmpty() && !parts[8].isEmpty()) {
-		        	double latitude = Double.parseDouble(parts[11]);
-		            double longitude = Double.parseDouble(parts[10]);
+	        		double latitude = Double.parseDouble(parts[10]);
+		            double longitude = Double.parseDouble(parts[11]);
 		            
 		            // Get the country latitude and longitude
 		            Country country = Country.getCountryAt(latitude, longitude);
-	
+
 		            if (country != null) {
 	            		String[] tagsTab = parts[8].split(",");
 		                for(int i = 0; i < tagsTab.length; i++) {
-		                	context.write(new Text(country.toString()), new Text(tagsTab[i]));
+		                	context.write(new Text(country.toString()), new StringAndInt(tagsTab[i], 1));
 		                }
 		            }
 	        	}
+	        	
 	        }
 		}
 	}
 	
 	
-	public static class TagReducer extends Reducer<Text, Text, Text, Text> {
+	public static class TagReducer extends Reducer<Text, StringAndInt, Text, Text> {
 
-        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<StringAndInt> values, Context context) throws IOException, InterruptedException {
             // Count occurrences of each tag
             HashMap<String, Integer> tagCount = new HashMap<>();
             
-            Configuration conf = context.getConfiguration();
+            Configuration conf = context.getConfiguration();			
             // Get the value of K from configuration
             int k = conf.getInt("topK", 3);
             
-            for (Text value : values) {
-                String tag = value.toString();
-                tagCount.put(tag, tagCount.getOrDefault(tag, 0) + 1);
+            for (StringAndInt value : values) {
+                String tag = value.getTag();
+                int occurrences = value.getOccurrences();
+                tagCount.put(tag, tagCount.getOrDefault(tag, 0) + occurrences);
             }
 
             // Use a priority queue to get the top K tags
@@ -73,10 +71,36 @@ public class Question2_1 {
             }
 
             // Emit the top K tags for the country
-            for (StringAndInt tc: minMaxPriorityQueue) {
+            while (!minMaxPriorityQueue.isEmpty()) {
+            	StringAndInt tc = minMaxPriorityQueue.poll();
                 context.write(key, new Text(tc.getTag() + " " + tc.getOccurrences()));
             }
         }
+	}
+	
+	public static class TagCombiner extends Reducer<Text, StringAndInt, Text, StringAndInt> {
+
+        @Override
+        protected void reduce(Text key, Iterable<StringAndInt> values, Context context) throws IOException, InterruptedException {
+        	HashMap<String, Integer> tagCount = new HashMap<>();
+        	// Count occurrences of each tag for the current country
+        	for (StringAndInt value : values) {
+                String tag = value.getTag();
+                int occurrences = value.getOccurrences();
+                tagCount.put(tag, tagCount.getOrDefault(tag, 0) + occurrences);
+            }
+
+        	for (Map.Entry<String, Integer> entry : tagCount.entrySet()) {
+                StringAndInt result = new StringAndInt(entry.getKey(), entry.getValue());
+                context.write(key, result);
+            }
+        }
+    }
+	
+	
+	
+	public static class JobSecondeMapper extends Mapper<Object, Text, Text, StringAndInt> {
+		
 	}
 	
 	
@@ -90,14 +114,15 @@ public class Question2_1 {
 		String output = otherArgs[1];
 		String k = otherArgs[2];
 		
-        Job job = Job.getInstance(conf, "Question2_1");
-        job.setJarByClass(Question2_1.class);
+        Job job = Job.getInstance(conf, "Question2_2");
+        job.setJarByClass(Question3_0.class);
 
         job.setMapperClass(TagMapper.class);
+        job.setCombinerClass(TagCombiner.class);
         job.setReducerClass(TagReducer.class);
 
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(StringAndInt.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
