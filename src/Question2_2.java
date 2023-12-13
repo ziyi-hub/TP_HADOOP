@@ -55,7 +55,7 @@ public class Question2_2 {
             
             Configuration conf = context.getConfiguration();			
             // Get the value of K from configuration
-            int k = conf.getInt("topK", 3);
+            int k = conf.getInt("topK", 5);
             
             for (StringAndInt value : values) {
                 String tag = value.getTag();
@@ -127,9 +127,6 @@ public class Question2_2 {
 
         FileInputFormat.addInputPath(job, new Path(input));
         job.setInputFormatClass(TextInputFormat.class);
-        
-        FileInputFormat.addInputPath(job, new Path(input));
-		job.setInputFormatClass(TextInputFormat.class);
 		
 		// Specify the output path
 		Path outputPath = new Path(output);

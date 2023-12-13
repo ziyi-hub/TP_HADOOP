@@ -8,12 +8,10 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import com.google.common.collect.MinMaxPriorityQueue;
@@ -58,7 +56,7 @@ public class Question3_0 {
             
             Configuration conf = context.getConfiguration();			
             // Get the value of K from configuration
-            int k = conf.getInt("topK", 3);
+            int k = conf.getInt("topK", 5);
             
             for (StringAndInt value : values) {
                 String tag = value.getTag();
@@ -99,6 +97,9 @@ public class Question3_0 {
             }
         }
     }
+	
+	
+	
 	
 	
 
