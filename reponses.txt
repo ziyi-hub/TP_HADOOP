@@ -154,9 +154,10 @@ Question20:
 		- Découper les tags par pays
 	
 Question22:
-	- 
+	- Le tri des données étant effectué sur le disque dur, cela limite l'utilisation de la mémoire vive, ce qui est crucial pour gérer de grandes quantités de données de manière scalable et efficace
 	
-	
+Question24:
+	- Non, il n'y a aucune garantie d'obtenir exactement le même résultat d'une exécution à l'autre lorsque des balises sont classées ex aequo dans le top-K pour un pays dans Hadoop MapReduce. La nature distribuée et parallèle du traitement Hadoop peut introduire des variations dans l'ordre des résultats entre les exécutions.
 	
 	
 	

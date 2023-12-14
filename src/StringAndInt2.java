@@ -31,18 +31,22 @@ public class StringAndInt2 implements WritableComparable<StringAndInt2> {
 
     @Override
 	public int compareTo(StringAndInt2 other) {
-		return Integer.compare(other.occurrences, this.occurrences);
+		int cmp = Integer.compare(other.occurrences, this.occurrences);
+		if (cmp==0) {
+			return this.tag.compareTo(other.tag);
+		}
+		return cmp;
 	}
 
     @Override
 	public void readFields(DataInput arg0) throws IOException {
-		tag = arg0.readUTF();
-        occurrences = arg0.readInt();
+		this.tag = arg0.readUTF();
+        this.occurrences = arg0.readInt();
 	}
 
 	@Override
 	public void write(DataOutput arg0) throws IOException {
-		arg0.writeUTF(tag);
-		arg0.writeInt(occurrences);
+		arg0.writeUTF(this.tag);
+		arg0.writeInt(this.occurrences);
 	}
 }
