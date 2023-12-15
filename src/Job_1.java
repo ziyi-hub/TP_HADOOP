@@ -9,7 +9,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -17,6 +16,11 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import com.google.common.collect.MinMaxPriorityQueue;
+
+/**
+ * 
+ * commande d'execution: hadoop jar nom_de_jar.jar Job_1 /data/flickr.txt nom_de_folder_output 5
+ */
 
 public class Job_1 {
 

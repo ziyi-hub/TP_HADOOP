@@ -123,11 +123,11 @@ Question15:
 
 Question18:
 	- Les tags les plus utilisés en France sont suivant:
-		FR	france 70772
-		FR	spain 19558
-		FR	europe 12340
-		FR	barcelona 24928
-		FR	paris 48410
+		FR	france 35386
+		FR	spain 9779
+		FR	europe 6170
+		FR	paris 24205
+		FR	barcelona 12464
 
 Question19:
 	- Oui

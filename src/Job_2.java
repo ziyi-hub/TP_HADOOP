@@ -13,6 +13,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+
+/**
+ * 
+ * commande d'execution: hadoop jar tp.jar Job_2 output/part-r-00000 output2
+ *
+ */
 public class Job_2 {
 		
 		public static class tri extends WritableComparator {
@@ -29,24 +35,11 @@ public class Job_2 {
 //		        // This assumes a simple serialization format where occurrences is an int
 		        int occurrences1 = readInt(b1, s1);
 		        int occurrences2 = readInt(b2, s2);
-//		        System.err.println(b1 + " " + s1 + " " + l1);
 //		        // Compare in descending order based on occurrences
 		        return Integer.compare(occurrences2, occurrences1);
 		        
 		    }
-		    
-//		    public int compare(WritableComparable a, WritableComparable b) {
-//		        StringAndInt2 first = (StringAndInt2) a;
-//				StringAndInt2 second = (StringAndInt2) b;
-//
-//				int occurrencesComparison = Integer.compare(second.getOccurrences(), first.getOccurrences());
-//
-//				if (occurrencesComparison == 0) {
-//				    return first.getTag().compareTo(second.getTag());
-//				}
-//
-//				return occurrencesComparison;
-//		    }
+
 		    
 		}
 		

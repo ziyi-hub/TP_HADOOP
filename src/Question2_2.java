@@ -16,6 +16,12 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 
+
+/**
+ * 
+ * commande d'execution: hadoop jar nom_de_jar.jar Question2_2 /data/flickr.txt nom_de_folder_output 5
+ * hadoop fs -cat output/part-r-00000 | grep "FR"
+ */
 public class Question2_2 {
 	
 	public static class TagMapper extends Mapper<Object, Text, Text, StringAndInt> {
@@ -121,9 +127,6 @@ public class Question2_2 {
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
-
-        
-        job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path(input));
         job.setInputFormatClass(TextInputFormat.class);

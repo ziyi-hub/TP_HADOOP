@@ -16,6 +16,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+/**
+ * 
+ * commande d'execution: hadoop jar nom_de_jar.jar Question1_1 /data/miserables nom_de_folder_output
+ */
 
 public class Question1_1 {
 	

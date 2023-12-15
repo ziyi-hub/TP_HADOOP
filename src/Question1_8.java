@@ -1,14 +1,18 @@
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -21,15 +25,18 @@ public class Question1_8 {
 		LIGNES_VIDES
 	}
 	
-	public static class MyMapper extends Mapper<Object, Text, Text, IntWritable> {
+	public static class CountMapper extends Mapper<Object, Text, Text, IntWritable> {
 		
 	    private final static IntWritable one = new IntWritable(1);
 	    private Text word = new Text();
+		private Map<String, Integer> wordCountMap;
 	    private Counter lignesVidesCounter;
 
 	    @Override
 	    protected void setup(Context context) throws IOException, InterruptedException {
-	        // Récupérer l'objet Counter pour les lignes vides
+	        // Initialize the HashMap
+	        wordCountMap = new HashMap<>();
+			// Récupérer l'objet Counter pour les lignes vides
 	        lignesVidesCounter = context.getCounter(Compteur.LIGNES_VIDES);
 	    }
 
@@ -41,21 +48,49 @@ public class Question1_8 {
 
 	        // Loop pour chaque mot dans le tokenizer
 	        while (tokenizer.hasMoreTokens()) {
-	            // Définir le mot actuel (supprime les espaces avant et après le mot actuel)
-	            word.set(tokenizer.nextToken().trim());
-
-	            // Émettre le mot comme clé de sortie et '1' comme valeur de sortie
-	            context.write(word, one);
+	            // Set the current word (trims leading and trailing spaces from the current word)
+	            String currentWord = tokenizer.nextToken().trim();
+	            
+	            // Update the word count in the in-mapper combiner buffer
+	            wordCountMap.put(currentWord, wordCountMap.getOrDefault(currentWord, 0) + 1);
 	        }
 
 	        // Vérifier si la ligne est vide et incrémenter le compteur si c'est le cas
 	        if (value.toString().trim().isEmpty()) {
 	            lignesVidesCounter.increment(1);
 	        }
+
+			
 			
 		}
+		@Override
+	    protected void cleanup(Context context) throws IOException, InterruptedException {
+	        // Emit the word counts from the in-mapper combiner buffer in the cleanup method
+	        for (Map.Entry<String, Integer> entry : wordCountMap.entrySet()) {
+	            word.set(entry.getKey());
+	            one.set(entry.getValue());
+	            context.write(word, one);
+	        }
+	    }
 	}
-
+	
+	public static class CountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+		private IntWritable result = new IntWritable();
+		
+		@Override
+		protected void reduce(Text word, Iterable<IntWritable> occurrences, Context output) throws IOException, InterruptedException {
+			
+			int count = 0;
+			
+			//This loop iterates over the values associated with a particular key. 
+			//In the context of a word count, each value is the number 1. It adds up all these 1 values to calculate the total count (sum) for the current word.
+			for(IntWritable occ : occurrences) {
+				count += occ.get();
+			}
+			result.set(count);
+			output.write(word, result);
+		}
+	}
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
@@ -63,14 +98,18 @@ public class Question1_8 {
 		String input = otherArgs[0];
 		String output = otherArgs[1];
 		
-		Job job = Job.getInstance(conf, "Question1_8");
+		Job job = Job.getInstance(conf, "Question1_8_2");
 		job.setJarByClass(Question1_8.class);
-		job.setMapperClass(MyMapper.class);
+		job.setMapperClass(CountMapper.class);
+
 		
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
 		
 		
+		job.setCombinerClass(CountReducer.class);
+		
+		job.setReducerClass(CountReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		
@@ -94,6 +133,3 @@ public class Question1_8 {
 	}
 
 }
-
-
-
